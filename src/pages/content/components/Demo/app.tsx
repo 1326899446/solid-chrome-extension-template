@@ -1,29 +1,32 @@
-import logo from "@src/assets/img/logo.svg";
 import "@src/styles/index.css";
-import styles from "./App.module.css";
+import { onMount } from 'solid-js';
 
 const App = () => {
+  function injectScript(file, node) {
+    var th = document.getElementsByTagName(node)[0];
+    var s = document.createElement('script');
+    s.setAttribute('type', 'text/javascript');
+    // s.innerHTML="window.a=222"
+    s.setAttribute('src', file);
+    th.appendChild(s);
+}
+const handleClick=()=>{
+  console.log("aaa");
+  
+}
+  onMount(()=>{
+    // 初始化注入 bridge 脚本 
+    injectScript(chrome.runtime.getURL('webview.js'), 'body');
+    // 
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      console.log('我在content',message, sender);
+    });
+  })
   return (
-    <div class="fixed right-5 top-20 z-[2000] w-80 rounded-xl bg-white">
-      <div class={styles.App}>
-        <header class={styles.header}>
-          <img
-            src={chrome.runtime.getURL(logo)}
-            class={styles.logo}
-            alt="logo"
-          />
-          <p class="flex flex-wrap font-bold">
-            Edit <code>src/pages/content/index.tsx</code> and save to reload.
-          </p>
-          <a
-            href="https://github.com/solidjs/solid"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Solid
-          </a>
-        </header>
-      </div>
+    <div class="fixed left-0 top-0 h-20 z-[2000] w-80 rounded-xl bg-red">
+      <a href="http://www.baidu.com">wwwwwwwwwww</a>
+      sssssssssssss
+      <div class='w-100 h-50 bg-red color-yellow' onClick={handleClick}>aaaaaaaa</div>
     </div>
   );
 };

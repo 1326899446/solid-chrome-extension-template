@@ -1,28 +1,48 @@
-import './message';
+import "./action";
+import "./message";
 
-const setIcon = () =>
-  chrome.action.setIcon({
-    path: {
-      "16": `icons/icon${active ? "-grey" : ""}-16.png`,
-      "48": `icons/icon${active ? "-grey" : ""}-48.png`,
-      "128": `icons/icon${active ? "-grey" : ""}-128.png`,
-    },
-  });
+// 监听 storage 变化
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  console.log(changes, namespace);
 
-chrome.runtime.onInstalled.addListener(() => {
-  setIcon();
+  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+    console.log(
+      ` "${namespace}" 区域 有一个属性"${key}" 发生了变化`,
+      `旧值为 "${oldValue}",新值为"${newValue}".`
+    );
+  }
 });
+//
 
-// When the user clicks on the extension action
-chrome.action.onClicked.addListener(async (tab) => {
-  console.log(tab);
-  // We retrieve the action badge to check if the extension is 'ON' or 'OFF'
-  // Next state will always be the opposite
-  active = !active;
-  setIcon();
+chrome.runtime.onInstalled.addListener(({ reason }) => {
+  console.log(reason);
 
-  // Set the action badge to the next state
-  chrome.storage.sync.set({ active: active }, function () {
-    console.log(`Value is set to ${active}`);
-  });
+  if (reason === "install") {
+  }
 });
+// chrome.declarativeNetRequest.
+// webRequest 在v3中弃用了
+// chrome.webRequest.onBeforeRequest.addListener(
+//   function (details) {
+//     console.log("-------------",details);
+
+//     // alert("aaa")
+//     const {url, initiator} = details;
+//     console.log(url);
+
+//     // console.log(url,initiator);
+
+//     // chrome.tabs.create({ url: 'http://www.aa.com' });
+
+//     return { cancel: true };
+//   },
+//   { urls: ["<all_urls>"] },
+
+//   // ["blocking"]
+// );
+// chrome.webNavigation.onBeforeNavigate.addListener((v) => {
+//   console.log(v);
+//   v.url = "javascript:;";
+//   // chrome.tabs.create({ url: 'http://www.aa.com' });
+//   return { redirectUrl: "javascript:;" };
+// });

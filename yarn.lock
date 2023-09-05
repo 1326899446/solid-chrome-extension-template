@@ -493,6 +493,29 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
+"@floating-ui/core@^0.6.1":
+  version "0.6.2"
+  resolved "http://npm.htsc/@floating-ui/core/download/@floating-ui/core-0.6.2.tgz#f2813f0e5f3d5ed7af5029e1a082203dadf02b7d"
+  integrity sha1-8oE/Dl89XtevUCnhoIIgPa3wK30=
+
+"@floating-ui/dom@0.4.4":
+  version "0.4.4"
+  resolved "http://npm.htsc/@floating-ui/dom/download/@floating-ui/dom-0.4.4.tgz#e0919d23e40bcc84ce2ebe1b9701b211f2d84b3c"
+  integrity sha1-4JGdI+QLzITOLr4blwGyEfLYSzw=
+  dependencies:
+    "@floating-ui/core" "^0.6.1"
+
+"@hope-ui/solid@^0.6.7":
+  version "0.6.7"
+  resolved "http://npm.htsc/@hope-ui/solid/download/@hope-ui/solid-0.6.7.tgz#52c5a6c72391f6ea3acf7e403ffe196b70af1359"
+  integrity sha1-UsWmxyOR9uo6z35AP/4Za3CvE1k=
+  dependencies:
+    "@floating-ui/dom" "0.4.4"
+    csstype "3.0.11"
+    focus-trap "6.7.3"
+    lodash.merge "4.6.2"
+    scroll-lock "2.1.5"
+
 "@humanwhocodes/config-array@^0.11.6":
   version "0.11.10"
   resolved "http://npm.htsc/@humanwhocodes/config-array/download/@humanwhocodes/config-array-0.11.10.tgz#5a3ffe32cc9306365fb3fd572596cd602d5e12d2"
@@ -625,6 +648,28 @@
   version "12.0.0"
   resolved "http://npm.htsc/@rometools/cli-win32-x64/download/@rometools/cli-win32-x64-12.0.0.tgz#63ab2dd525f501864251d8115570471c728aba22"
   integrity sha1-Y6st1SX1AYZCUdgRVXBHHHKKuiI=
+
+"@solid-primitives/refs@^1.0.5":
+  version "1.0.5"
+  resolved "http://npm.htsc/@solid-primitives/refs/download/@solid-primitives/refs-1.0.5.tgz#bd2d64c477e56dafc7bb73657fbb7c785eae0808"
+  integrity sha1-vS1kxHflba/Hu3Nlf7t8eF6uCAg=
+  dependencies:
+    "@solid-primitives/utils" "^6.2.1"
+
+"@solid-primitives/transition-group@^1.0.2":
+  version "1.0.3"
+  resolved "http://npm.htsc/@solid-primitives/transition-group/download/@solid-primitives/transition-group-1.0.3.tgz#d09bb5115267fc0895361b43eaca66706167be06"
+  integrity sha1-0Ju1EVJn/AiVNhtD6spmcGFnvgY=
+
+"@solid-primitives/utils@^6.2.1":
+  version "6.2.1"
+  resolved "http://npm.htsc/@solid-primitives/utils/download/@solid-primitives/utils-6.2.1.tgz#320fb2180743031622b40fc43b0e63bf55686cfb"
+  integrity sha1-Mg+yGAdDAxYitA/EOw5jv1VobPs=
+
+"@stitches/core@^1.2.8":
+  version "1.2.8"
+  resolved "http://npm.htsc/@stitches/core/download/@stitches/core-1.2.8.tgz#dce3b8fdc764fbc6dbea30c83b73bfb52cf96173"
+  integrity sha1-3OO4/cdk+8bb6jDIO3O/tSz5YXM=
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
@@ -1270,6 +1315,11 @@ cssesc@^3.0.0:
   resolved "http://npm.htsc/cssesc/download/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha1-N3QZGZA7hoVl4cCep0dEXNGJg+4=
 
+csstype@3.0.11:
+  version "3.0.11"
+  resolved "http://npm.htsc/csstype/download/csstype-3.0.11.tgz#d66700c5eacfac1940deb4e3ee5642792d85cd33"
+  integrity sha1-1mcAxerPrBlA3rTj7lZCeS2FzTM=
+
 csstype@^3.1.0:
   version "3.1.2"
   resolved "http://npm.htsc/csstype/download/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
@@ -1797,6 +1847,13 @@ flatted@^3.1.0:
   version "3.2.7"
   resolved "http://npm.htsc/flatted/download/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
   integrity sha1-YJ85IHy2FLidB2W0d8stQ3+/l4c=
+
+focus-trap@6.7.3:
+  version "6.7.3"
+  resolved "http://npm.htsc/focus-trap/download/focus-trap-6.7.3.tgz#b5dc195b49c90001f08a63134471d1e6dd381ddd"
+  integrity sha1-tdwZW0nJAAHwimMTRHHR5t04Hd0=
+  dependencies:
+    tabbable "^5.2.1"
 
 for-each@^0.3.3:
   version "0.3.3"
@@ -2355,7 +2412,7 @@ locate-path@^6.0.0:
   dependencies:
     p-locate "^5.0.0"
 
-lodash.merge@^4.6.2:
+lodash.merge@4.6.2, lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "http://npm.htsc/lodash.merge/download/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha1-VYqlO0O2YeGSWgr9+japoQhf5Xo=
@@ -2846,6 +2903,11 @@ safe-regex-test@^1.0.0:
     get-intrinsic "^1.1.3"
     is-regex "^1.1.4"
 
+scroll-lock@2.1.5:
+  version "2.1.5"
+  resolved "http://npm.htsc/scroll-lock/download/scroll-lock-2.1.5.tgz#18bb7697f02176cbfd093726c3c972b7cbc9975f"
+  integrity sha1-GLt2l/Ahdsv9CTcmw8lyt8vJl18=
+
 semver@^5.7.1:
   version "5.7.2"
   resolved "http://npm.htsc/semver/download/semver-5.7.2.tgz#48d55db737c3287cd4835e17fa13feace1c41ef8"
@@ -2922,6 +2984,14 @@ solid-refresh@^0.5.0:
     "@babel/generator" "^7.21.1"
     "@babel/helper-module-imports" "^7.18.6"
     "@babel/types" "^7.21.2"
+
+solid-transition-group@^0.2.3:
+  version "0.2.3"
+  resolved "http://npm.htsc/solid-transition-group/download/solid-transition-group-0.2.3.tgz#ef441d9e4620cddc4d29cdbc958b09f94db515c4"
+  integrity sha1-70QdnkYgzdxNKc28lYsJ+U21FcQ=
+  dependencies:
+    "@solid-primitives/refs" "^1.0.5"
+    "@solid-primitives/transition-group" "^1.0.2"
 
 source-map-js@^1.0.2:
   version "1.0.2"
@@ -3020,6 +3090,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "http://npm.htsc/supports-preserve-symlinks-flag/download/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha1-btpL00SjyUrqN21MwxvHcxEDngk=
+
+tabbable@^5.2.1:
+  version "5.3.3"
+  resolved "http://npm.htsc/tabbable/download/tabbable-5.3.3.tgz#aac0ff88c73b22d6c3c5a50b1586310006b47fbf"
+  integrity sha1-qsD/iMc7ItbDxaULFYYxAAa0f78=
 
 tailwindcss@^3.3.2:
   version "3.3.2"

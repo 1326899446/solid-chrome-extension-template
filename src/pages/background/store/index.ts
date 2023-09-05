@@ -8,3 +8,10 @@ export const store = {
     store.activated = result.activated;
   });
 })()
+
+export const getActived = ()=>{
+  return store.activated;
+}
+export const setActived = (value)=>{
+  store.activated = value
+}

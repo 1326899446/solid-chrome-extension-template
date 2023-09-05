@@ -40,6 +40,7 @@
     "utils",
     "vite.config.ts",
     "node_modules/@types",
-    "src/manifest.ts"
+    "src/manifest.ts",
+    "public/webview.js"
   ]
 }
