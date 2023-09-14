@@ -1,4 +1,4 @@
-import path, { resolve } from "path";
+import { resolve } from "path";
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
 import WindiCSS from "vite-plugin-windicss";
@@ -25,28 +25,55 @@ export default defineConfig({
     outDir,
     sourcemap: isDev,
     minify: false,
-    rollupOptions: {
-      input: {
-        // devtools: resolve(pagesDir, "devtools", "index.html"),
-        // panel: resolve(pagesDir, "panel", "index.html"),
-        content: resolve(pagesDir, "content", "index.tsx"),
+    rollupOptions:{
+      input:{
         background: resolve(pagesDir, "background", "index.ts"),
-        // contentStyle: resolve(pagesDir, "content", "style.scss"),
         popup: resolve(pagesDir, "popup", "index.html"),
-        // newtab: resolve(pagesDir, "newtab", "index.html"),
-        // options: resolve(pagesDir, "options", "index.html"),
+        content: resolve(pagesDir, "content", "index.ts"),
       },
       output: {
-        entryFileNames: "assets/[name].js",
+        entryFileNames: "[name].js",
         // chunkFileNames: "assets/js/[name].js",
-
-        assetFileNames: (assetInfo) => {
-          const { dir, name: _name } = path.parse(assetInfo.name);
-          // const assetFolder = getLastElement(dir.split("/"));
-          // const name = assetFolder + firstUpperCase(_name);
-          return `assets/[ext]/${_name}.chunk.[ext]`;
-        },
+        // assetFileNames: (assetInfo) => {
+        //   const { dir, name: _name } = path.parse(assetInfo.name as string);
+        //   // const assetFolder = getLastElement(dir.split("/"));
+        //   // const name = assetFolder + firstUpperCase(_name);
+        //   return `assets/[ext]/${_name}.chunk.[ext]`;
+        // },
       },
-    },
+    }
+    // lib: {
+    //   formats: ['es'],
+    //   // name:"content",
+    //   entry:[resolve(pagesDir, "content", "index.tsx")],
+    //   fileName: (_, entryName) => {
+    //     console.log(entryName,_);
+    //     return `${entryName}.js`;
+    //   },
+    // },
+    
+    // rollupOptions: {
+    //   input: {
+    //     // devtools: resolve(pagesDir, "devtools", "index.html"),
+    //     // panel: resolve(pagesDir, "panel", "index.html"),
+    //     // content: resolve(pagesDir, "content", "index.tsx"),
+    //     background: resolve(pagesDir, "background", "index.ts"),
+    //     // contentStyle: resolve(pagesDir, "content", "style.scss"),
+    //     popup: resolve(pagesDir, "popup", "index.html"),
+    //     // newtab: resolve(pagesDir, "newtab", "index.html"),
+    //     // options: resolve(pagesDir, "options", "index.html"),
+    //   },
+    //   // output: {
+    //   //   entryFileNames: "assets/[name].js",
+    //   //   // chunkFileNames: "assets/js/[name].js",
+    //   //   assetFileNames: (assetInfo) => {
+    //   //     const { dir, name: _name } = path.parse(assetInfo.name as string);
+    //   //     // const assetFolder = getLastElement(dir.split("/"));
+    //   //     // const name = assetFolder + firstUpperCase(_name);
+    //   //     return `assets/[ext]/${_name}.chunk.[ext]`;
+    //   //   },
+    //   // },
+    // },
+    
   },
 });
