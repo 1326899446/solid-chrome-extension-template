@@ -30,6 +30,7 @@ export default defineConfig({
         background: resolve(pagesDir, "background", "index.ts"),
         popup: resolve(pagesDir, "popup", "index.html"),
         content: resolve(pagesDir, "content", "index.ts"),
+        options: resolve(pagesDir, "options", "index.html"),
       },
       output: {
         entryFileNames: "[name].js",

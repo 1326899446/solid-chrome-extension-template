@@ -137,6 +137,7 @@ window.WebViewJavascriptBridge = {
               url,
           }
         },(res)=>{
+          console.log(res);
           const { jsfuncname, params} = res
           window[jsfuncname](params)
         })

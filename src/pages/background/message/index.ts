@@ -10,7 +10,7 @@ import { handleAction } from '../action';
  *   url:'',
  * }
  */
-chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
   const { type, params } = message;
   console.log("type",type,"message",message,"params",params);
   switch (type) {
@@ -19,8 +19,8 @@ chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => 
       url = decodeURIComponent(url)
       const reg = /action:(\d+)/gi;
       const action = reg.exec(url)?.[1];
-      const res = handleAction(action, url, sender.origin)
-      if(res) return res
+      const res = await handleAction(action, url, sender.origin)
+      if(res) sendResponse(res)
       break;
     }
     default: {

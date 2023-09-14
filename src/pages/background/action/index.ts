@@ -6,7 +6,7 @@
 //     const { url: oriUrl, initiator } = details;
 //     const url = decodeURIComponent(oriUrl);
 
-import { extractUrl } from './utils';
+import { extractUrl } from "./utils";
 
 //     console.log(url, initiator);
 //     if (url === "https://www.baidu.com/" && index) {
@@ -37,10 +37,12 @@ import { extractUrl } from './utils';
 // );
 
 export const handleAction = (action, url, initiator) => {
+  return new Promise((resolve, reject) => {
     switch (action) {
       case "10061": {
         // 如果有url= 则优先尝试在新标签页打开此url的开发环境页面/xxx.htm或者/xxx.html
         if (url.includes("url=")) {
+          
           console.log("新标签页面跳转：", url);
           const htmlUrl = extractUrl(url);
           if (htmlUrl.includes("html")) {
@@ -55,16 +57,35 @@ export const handleAction = (action, url, initiator) => {
         } else {
           console.log("拦截页面跳转：", url);
         }
-        return ;
+        resolve('');
+        break
       }
-      case "10090":{
-        return {
-            jsfuncname:"",
-            params:"aa"
-        }
+      case "10090": {
+        resolve({
+          jsfuncname: "",
+          params: "aa",
+        });
+        break
       }
-      default :{
-        return ;
+      default: {
+        const qIndex = url.indexOf("?");
+        const search = url.slice(qIndex);
+        const searchParams = search.slice(1).split("&");
+        const jsfuncname = searchParams
+          .filter((p) => {
+            return p.split("=")[0] === "jsfuncname";
+          })[0]
+          .split("=")[1];
+        chrome.storage.sync.get(["actions"], ({ actions }) => {
+          const index = actions.findIndex((item) => {
+            return item.id == action;
+          });
+          resolve({
+            jsfuncname,
+            params: index >= 0 ? actions[index].data : "",
+          });
+        });
       }
     }
-  };
+  });
+};

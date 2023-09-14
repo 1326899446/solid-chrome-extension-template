@@ -3,12 +3,6 @@ import "@src/styles/index.css";
 import { createSignal, onMount } from "solid-js";
 import { initedWebviewParams } from "../background/constant";
 import styles from "./Popup.module.css";
-chrome.runtime.sendMessage(
-  { action: "get", params: ["active"] },
-  (response) => {
-    console.log("----------------------", response);
-  }
-);
 
 const Popup = () => {
   const [switchStatus, setSwitchStatus] = createSignal<boolean>(true);
@@ -31,6 +25,10 @@ const Popup = () => {
   };
   const jumpActionManager = () => {
     // 跳转到专门的action管理页面
+    chrome.runtime.openOptionsPage(()=>{
+      console.log("aaaaaaaaa");
+      
+    })
   };
   const handleWeakAccountChange = ()=>{
     setWeakAccountStatus(!weakAccountStatus());
@@ -45,26 +43,28 @@ const Popup = () => {
     });
   }
   onMount(() => {
-    chrome.storage.sync.get(
-      ["switch", "mode", "nativeParams"],
-      ({ switch: data, mode, nativeParams }) => {
-        console.log(data,mode,nativeParams);
-        const {weakAccountStatus,accountStatus} = nativeParams;
-        setMode(mode);
-        setSwitchStatus(data);
-        setAccountStatus(accountStatus)
-        setWeakAccountStatus(weakAccountStatus)
-      }
-    );
-    chrome.storage.local.get(["webviewParams"], (webviewParams) => {
-      chrome.tabs.getSelected(null, function (tab) {
-        // 先获取当前页面的tabID
-        console.log(webviewParams);
-
-        let curWebviewParams = webviewParams[tab.id];
-        setWebviewParams(curWebviewParams || initedWebviewParams);
+    setTimeout(()=>{
+      chrome.storage.sync.get(
+        ["switch", "mode", "nativeParams"],
+        ({ switch: data, mode, nativeParams }) => {
+          const {weakAccountStatus,accountStatus} = nativeParams;
+          setMode(mode);
+          setSwitchStatus(data);
+          setAccountStatus(accountStatus)
+          setWeakAccountStatus(weakAccountStatus)
+        }
+      );
+      chrome.storage.local.get(["webviewParams"], (webviewParams) => {
+        chrome.tabs.getSelected(null, function (tab) {
+          // 先获取当前页面的tabID
+          console.log(webviewParams);
+  
+          let curWebviewParams = webviewParams[tab.id];
+          setWebviewParams(curWebviewParams || initedWebviewParams);
+        });
       });
-    });
+    },1000)
+    
   });
   return (
     <HopeProvider>
