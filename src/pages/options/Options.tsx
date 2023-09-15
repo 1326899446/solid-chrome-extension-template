@@ -19,13 +19,12 @@ import { createSignal, onMount } from "solid-js";
 import styles from "./Options.module.css";
 
 interface actionProps {
-  id: string | number;
   // 最好是个json字符串
   data: string;
 }
 const Options = () => {
   const { isOpen, onOpen, onClose } = createDisclosure();
-  const [actionList, setActionList] = createSignal<actionProps[]>([]);
+  const [actionList, setActionList] = createSignal<{[key : string|number]:actionProps}>({});
   const [actionNumber,setActionNumber] = createSignal<string>('')
   const [data,setData] = createSignal('')
 
@@ -41,10 +40,12 @@ const Options = () => {
     setData(e.target.value);
   }
   const submit = ()=>{
-    setActionList([...actionList(),{
-      id:actionNumber(),
-      data:data()
-    }])
+    setActionList({
+      ...actionList(),
+      [actionNumber()]:{
+        data: data()
+      }
+    })
     chrome.storage.sync.set({actions:actionList()})
     onClose()
   }
@@ -59,11 +60,11 @@ const Options = () => {
             <div class={styles.id}>action号</div>
             <div class={styles.data}>数据</div>
           </div>
-          {actionList().map((action) => {
-            const { id, data } = action;
+          {Object.keys(actionList()).map((action) => {
+            const {data } = actionList()[action];
             return (
               <div class={styles.row}>
-                <div class={styles.id}>{id}</div>
+                <div class={styles.id}>{action}</div>
                 <div class={styles.data}>{data}</div>
               </div>
             );
@@ -84,7 +85,7 @@ const Options = () => {
               <FormControl>
                 <FormLabel for="data">测试数据</FormLabel>
                 <Input id="data" value={data()} onInput={handleDataInput}/>
-                <FormHelperText>json字符串</FormHelperText>
+                <FormHelperText>是一个对象时必须是一个json字符串</FormHelperText>
               </FormControl>
             </ModalBody>
             <ModalFooter>

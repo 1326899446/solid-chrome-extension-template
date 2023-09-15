@@ -1,7 +1,7 @@
 (function (exports) {
   var HTJSBridge = {
     invoke: function (api, params, callback) {
-      console.log("执行了ios bridge的 invoke");
+      console.log("执行了ios bridge的 invoke",api,params);
       var self = this;
       self.setup(function (bridge) {
         bridge.callHandler(api, params, function (response) {
@@ -49,6 +49,16 @@
   exports.MyWebView = null;
   exports.HTJSBridge = HTJSBridge;
 })(window);
+Object.defineProperty(window.navigator, 'platform', {
+  get:()=>{
+    return 'iPhone'
+  }
+})
+Object.defineProperty(window.navigator, 'appVersion', {
+  get:()=>{
+    return '5.0 (iPhone; CPU iPhone OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+  }
+})
 function resolve_send_data(data) {
   const { action, path, funcId, ...biz_params } =
     Object.prototype.toString.call(data) === '[object Object]' ? data : ({});
@@ -130,6 +140,8 @@ window.WebViewJavascriptBridge = {
   callHandler: (api, params, callback) => {
     switch (api) {
       case 'hrefWithMsgUrl': {
+        console.log("ios的页面跳转",params);
+        const {url} = params
         // params 为 {url:""}
         chrome.runtime.sendMessage('eidkoplpehhpomkpccndgedopkbninin', {
           type:'action',
@@ -144,6 +156,7 @@ window.WebViewJavascriptBridge = {
           }
           
         })
+        break;
       }
       case 'callHTNativeMethod':{
         chrome.runtime.sendMessage()

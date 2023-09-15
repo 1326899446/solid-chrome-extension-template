@@ -92,13 +92,19 @@ export const handleAction = (action, url, initiator) => {
           })[0]
           .split("=")[1];
         chrome.storage.sync.get(["actions"], ({ actions }) => {
-          const index = actions.findIndex((item) => {
-            return item.id == action;
-          });
-          resolve({
-            jsfuncname,
-            params: index >= 0 ? actions[index].data : "",
-          });
+          try {
+            const res = JSON.parse(actions[action]?.data)
+            resolve({
+              jsfuncname,
+              params:  res,
+            });
+          } catch (error) {
+            resolve({
+              jsfuncname,
+              params:  actions[action]?.data,
+            });
+          }
+          
         });
       }
     }
