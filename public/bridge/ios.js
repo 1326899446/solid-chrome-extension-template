@@ -139,7 +139,10 @@ window.WebViewJavascriptBridge = {
         },(res)=>{
           console.log(res);
           const { jsfuncname, params} = res
-          window[jsfuncname](params)
+          if(jsfuncname){
+            window[jsfuncname](params)
+          }
+          
         })
       }
       case 'callHTNativeMethod':{

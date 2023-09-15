@@ -1,3 +1,5 @@
+import { initWebviewContent } from '../constant';
+
 export function extractUrl(url) {
   const regex = /\?(.*)/;
   const match = url.match(regex);
@@ -42,3 +44,36 @@ export const sendMessageToContent = async ({ action, payload }) => {
     payload: "i come form popop",
   });
 };
+
+export const setTabWebviewParams = (tabId, params)=>{
+   chrome.storage.local.get(['webviewParams'],({webviewParams})=>{ 
+      chrome.storage.local.set({webviewParams:{
+        ...webviewParams,
+        [tabId]:{
+          ...initWebviewContent,
+          ...params,
+        }
+      }})
+    })
+}
+
+export const extractUrlParams = (url)=>{
+  const regex = /\?(.*)/;
+  const match = url.match(regex);
+
+  if (match) {
+    const queryParams = match[1]; // 提取查询参数部分
+    const queryParamsArray = queryParams.split("&&"); // 将查询参数部分分割成数组
+    let params = {};
+    queryParamsArray.forEach((p)=>{
+      const pArr = p.split("=");
+      params[pArr[0]]=pArr[1]
+    })
+    return params
+
+    
+  } else {
+    console.log("No query parameters found");
+    return "";
+  }
+}

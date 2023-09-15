@@ -12,7 +12,7 @@ import { handleAction } from '../action';
  */
 chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
   const { type, params } = message;
-  console.log("type",type,"message",message,"params",params);
+  console.log("type",type,"message",message,"params",params,"sender",sender);
   switch (type) {
     case "action": {
       let { url } = params || {}

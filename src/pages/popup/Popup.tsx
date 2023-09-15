@@ -1,7 +1,7 @@
 import { Button, HopeProvider, Radio, RadioGroup, Switch } from "@hope-ui/solid";
 import "@src/styles/index.css";
 import { createSignal, onMount } from "solid-js";
-import { initedWebviewParams } from "../background/constant";
+import { initWebviewContent } from "../background/constant";
 import styles from "./Popup.module.css";
 
 const Popup = () => {
@@ -42,6 +42,11 @@ const Popup = () => {
       console.log("强账号状态改变");
     });
   }
+  const test = ()=>{
+    chrome.storage.local.get(['webviewParams'],({webviewParams})=>{ 
+      console.log(webviewParams);     
+    })
+  }
   onMount(() => {
     setTimeout(()=>{
       chrome.storage.sync.get(
@@ -54,17 +59,24 @@ const Popup = () => {
           setWeakAccountStatus(weakAccountStatus)
         }
       );
-      chrome.storage.local.get(["webviewParams"], (webviewParams) => {
+      chrome.storage.local.get(["webviewParams"], ({webviewParams}) => {
         chrome.tabs.getSelected(null, function (tab) {
           // 先获取当前页面的tabID
-          console.log(webviewParams);
-  
           let curWebviewParams = webviewParams[tab.id];
-          setWebviewParams(curWebviewParams || initedWebviewParams);
+          setWebviewParams(curWebviewParams || initWebviewContent);
+          if(!curWebviewParams){ 
+            chrome.storage.local.set({webviewParams:{
+              ...webviewParams,
+              [tab.id]:initWebviewContent
+            }})
+          }
         });
       });
-    },1000)
-    
+    },0)
+    chrome.storage.onChanged.addListener((changes)=>{
+      console.log("changes",changes);
+      
+    })
   });
   return (
     <HopeProvider>
@@ -100,7 +112,8 @@ const Popup = () => {
           <Switch checked={weakAccountStatus()} onchange={handleWeakAccountChange}>弱账号</Switch>
           <Switch checked={accountStatus()} onchange={handleAccountChange}>强账号</Switch>
         </section>
-        <Button onClick={jumpActionManager}>Action管理</Button>
+        <Button onClick={jumpActionManager} class={styles.action}>Action管理</Button>
+        <Button onClick={test} class={styles.action}>Test</Button>
       </div>
     </HopeProvider>
   );

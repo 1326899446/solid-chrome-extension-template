@@ -6,7 +6,8 @@
 //     const { url: oriUrl, initiator } = details;
 //     const url = decodeURIComponent(oriUrl);
 
-import { extractUrl } from "./utils";
+import { webviewParamsList } from '../constant';
+import { extractUrl, extractUrlParams, setTabWebviewParams } from "./utils";
 
 //     console.log(url, initiator);
 //     if (url === "https://www.baidu.com/" && index) {
@@ -41,22 +42,36 @@ export const handleAction = (action, url, initiator) => {
     switch (action) {
       case "10061": {
         // 如果有url= 则优先尝试在新标签页打开此url的开发环境页面/xxx.htm或者/xxx.html
+      
         if (url.includes("url=")) {
-          
+
           console.log("新标签页面跳转：", url);
           const htmlUrl = extractUrl(url);
+          const params = extractUrlParams(url)
+          const webviewParams = {}
+          webviewParamsList.forEach((p)=>{
+            if(params[p]){
+              webviewParams[p]=params[p];
+            }
+          })
           if (htmlUrl.includes("html")) {
             // .html的页面直接是origin+页面名称
             const arr = htmlUrl.split("/");
             const last = arr[arr.length - 1];
-            chrome.tabs.create({ url: `${initiator}/${last}` });
+            
+            chrome.tabs.create({ url: `${initiator}/${last}` },(tab)=>{
+              setTabWebviewParams(tab.id,webviewParams)
+            });
           } else {
             // svn页面直接跳完整路径
-            chrome.tabs.create({ url: `${initiator}/${htmlUrl}` });
+            chrome.tabs.create({ url: `${initiator}/${htmlUrl}` },(tab)=>{
+              setTabWebviewParams(tab.id,webviewParams)
+            });
           }
         } else {
           console.log("拦截页面跳转：", url);
         }
+        
         resolve('');
         break
       }

@@ -10,7 +10,10 @@ window.MyWebView={
             console.log(res);
             //对于有数据返回的 action 是通过 jsfuncname 实现调用的
             const { jsfuncname, params} = res
-            window[jsfuncname](params)
+            if(jsfuncname){
+                window[jsfuncname](params)
+            }
+            
         })
     },
     callHTNativeMethod:()=>{
