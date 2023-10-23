@@ -49,6 +49,7 @@
   exports.MyWebView = null;
   exports.HTJSBridge = HTJSBridge;
 })(window);
+
 Object.defineProperty(window.navigator, 'platform', {
   get:()=>{
     return 'iPhone'

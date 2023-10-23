@@ -19,3 +19,17 @@ export class Result<T, E> {
     return this.#_value;
   }
 }
+
+export const parseUrl = (url:string)=>{
+  const qIndex = url.indexOf('?');
+  const querystring = url.slice(qIndex+1);
+  const queryArr = querystring.split("");
+  const queryObj = queryArr.reduce((pre,cur)=>{
+    const curQuery = cur.split("=");
+    return {
+      ...pre,
+      [curQuery[0]]:curQuery[1] ||''
+    }
+  },{})
+  return queryObj
+}
