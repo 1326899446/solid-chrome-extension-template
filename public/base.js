@@ -3,18 +3,38 @@
     exports.createDialog = function(message, ok, cancel){
         const fragment = document.createDocumentFragment();
         const div = document.createElement('div');
-        div.classList.add('dialog');
+        div.id="dialog";
+        div.style.position = 'fixed';
+        div.style.left = '0';
+        div.style.top = '40%';
+        div.style.width = '100%';
+        div.style.height = '150px';
+        div.style.zIndex="9999";
+        div.style.backgroundColor = '#ffffff';
         const p = document.createElement('p');
+        p.style.textAlign = 'center';
+        p.style.fontSize = '24px';
         p.innerText = message;
+        p.style.height='100px';
         div.appendChild(p);
+        const buttonDiv = document.createElement('div');
+        buttonDiv.style.textAlign = 'center';
         const button = document.createElement('button');
         button.innerText = '确定';
-        button.addEventListener('click', ok);
-        div.appendChild(button);
+        button.addEventListener('click', ()=>{
+            ok();
+            document.getElementById('dialog').remove();
+        });
+        buttonDiv.appendChild(button)
+        buttonDiv.style.height='50px';
         const button2 = document.createElement('button');
         button2.innerText = '取消';
-        button2.addEventListener('click', cancel);
-        div.appendChild(button2);
+        button2.addEventListener('click', ()=>{
+            cancel();
+            document.getElementById('dialog').remove();
+        });
+        buttonDiv.appendChild(button2)
+        div.appendChild(buttonDiv);
         fragment.appendChild(div);
         document.body.appendChild(fragment);
     }

@@ -6,9 +6,7 @@ export const handleAction = (action, url, initiator) => {
     switch (action) {
       case "10061": {
         // 如果有url= 则优先尝试在新标签页打开此url的开发环境页面/xxx.htm或者/xxx.html
-      
         if (url.includes("url=")) {
-
           console.log("新标签页面跳转：", url);
           const htmlUrl = extractUrl(url);
           const params = extractUrlParams(url)
@@ -22,7 +20,6 @@ export const handleAction = (action, url, initiator) => {
             // .html的页面直接是origin+页面名称
             const arr = htmlUrl.split("/");
             const last = arr[arr.length - 1];
-            
             chrome.tabs.create({ url: `${initiator}/${last}` },(tab)=>{
               setTabWebviewParams(tab.id,webviewParams)
             });
@@ -35,21 +32,23 @@ export const handleAction = (action, url, initiator) => {
         } else {
           console.log("拦截页面跳转：", url);
         }
-        
         resolve('');
         break
       }
       case "10090": {
+        // 还有一个登录后跳转的问题
         resolve({
-          jsfuncname: "",
-          params: "aa",
+          type:'openDialog',
+          text:'即将强登录',
+          accountType:0,
         });
         break
       }
       case "10091": {
         resolve({
-          jsfuncname: "",
-          params: "aa",
+          type:'openDialog',
+          text:'即将弱登录',
+          accountType:1,
         });
         break
       }
@@ -101,6 +100,11 @@ chrome.runtime.onMessageExternal.addListener(async (message, sender, sendRespons
       const action = reg.exec(url)?.[1];
       const res = await handleAction(action, url, sender.origin)
       if(res) sendResponse(res)
+      break;
+    }
+    case "login":{
+      const {accountType} = params;
+      chrome.storage.sync.set({[accountType? 'weakAccountStatus':'accountStatus']:true})
       break;
     }
     default: {

@@ -1,24 +1,44 @@
-window.MyWebView={
-    onJsOverrideUrlLoading:(url)=>{
-        console.log(url);
-        chrome.runtime.sendMessage('eidkoplpehhpomkpccndgedopkbninin', {
-            type:'action',
-            params:{
-                url,
-            }
-        },(res)=>{
-            // TODO 完善这的代码
-            console.log(res);
-            //对于有数据返回的 action 是通过 jsfuncname 实现调用的
-            const { jsfuncname, params} = res
-            if(jsfuncname){
-                window[jsfuncname](params)
-            }
-            
-        })
-    },
-    callHTNativeMethod:()=>{
-        console.log("hello");
-    }
-}
-window.HTJSBridge=null
+window.MyWebView = {
+  onJsOverrideUrlLoading: (url) => {
+    console.log(url);
+    chrome.runtime.sendMessage(
+      "eidkoplpehhpomkpccndgedopkbninin",
+      {
+        type: "action",
+        params: {
+          url,
+        },
+      },
+      (res) => {
+        // TODO 完善这的代码
+        const { type, jsfuncname, params } = res;
+        console.log(res);
+        if (type === "openDialog") {
+          const { text = "", accountType } = res;
+          const success = () => {
+            chrome.runtime.sendMessage("eidkoplpehhpomkpccndgedopkbninin", {
+              type: "login",
+              params: {
+                accountType,
+              },
+            });
+            console.log(window.GoBackOnLoad());
+            window.GoBackOnLoad();
+          };
+          const fail = () => {
+            window.GoBackOnLoad();
+          };
+          window.createDialog(text, success, fail);
+        } else if (jsfuncname) {
+          if (jsfuncname && typeof window[jsfuncname] === "function") {
+            window[jsfuncname](params);
+          }
+        }
+      }
+    );
+  },
+  callHTNativeMethod: () => {
+    console.log("hello");
+  },
+};
+window.HTJSBridge = null;
