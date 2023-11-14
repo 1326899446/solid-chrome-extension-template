@@ -1,103 +1,175 @@
-import { nativeFileContent, nativeParams } from '../constant';
-import { getQueryParams, parseData, replaceNativeParams, returnScriptResult, returnXHRResult, sendRequestAgain } from "./utils";
+import { reqFile, reqLocal, reqMemory } from "./read";
+import {
+  parseData,
+  replaceNativeParams,
+  returnScriptResult,
+  returnXHRResult,
+  sendRequestAgain,
+} from "./utils";
+import { writeFile, writeLocal, writeMemory } from './write';
+
 const pageList = ["localhost"];
 const judgeIsFetchRequest = (url) => {
   return pageList.some((str) => {
     return url.includes(str);
   });
 };
-
-
-
-function bindActiveTab(tabId: number, url: string) {
-  if (!judgeIsFetchRequest(url)) {
-    return;
-  }
-  console.log("绑定tab，允许拦截请求，");
-
-  chrome.debugger.getTargets(async (list) => {
-    // 获取当前页面的tabId
-    // 绑定到想要的tab
-    chrome.debugger.attach({ tabId }, "1.3", async () => {
-      await chrome.debugger.sendCommand({ tabId }, "Fetch.enable", {}, () => {
-        console.log("开启拦截页面请求");
+chrome.debugger.onEvent.addListener(async (source, method, params) => {
+  console.log("请求信息", source, method, params);
+  const { tabId } = source;
+  const resourceType = (params as any).resourceType;
+  const {
+    url,
+    headers,
+    postData,
+    method: requestMethod,
+  } = (params as any).request;
+  if (resourceType === "Script" && url.includes("/common/")) {
+    // 表示请求静态资源，js文件
+    sendRequestAgain({
+      method: requestMethod,
+      url,
+      data: postData,
+      headers,
+    })
+      .then((response) => response.text())
+      .then((result) => {
+        returnScriptResult(tabId, (params as any).requestId, result);
       });
-    });
-    chrome.debugger.onEvent.addListener(async (source, method, params) => {
-      console.log("请求信息",source, method, params);
-      const resourceType = (params as any).resourceType;
-      const {
-        url,
-        headers,
-        postData,
-        method: requestMethod,
-      } = (params as any).request;
-      if(resourceType === 'Script' && url.includes('/common/')){
-        // 表示请求静态资源，js文件
-        sendRequestAgain({
-          method: requestMethod,
-          url,
-          data: postData,
-          headers,
-        })
-          .then((response) => response.text())
-          .then((result) => {
-            returnScriptResult(tabId, (params as any).requestId, result);
-          });
-      }else if (url.includes("reqxml")) {
-        // 接口请求
-        sendRequestAgain({
-          method: requestMethod,
-          url,
-          data: replaceNativeParams(parseData(postData)),
-          headers,
-        })
-          .then((response) => response.text())
-          .then((result) => {
-            returnXHRResult(tabId, (params as any).requestId, result);
-          }).catch((err)=>{
-            console.log(err);
-            
-          });
-      } else if(url.includes("reqlocal")){
-        // 变量读取
-        const queryParams =  getQueryParams(url);
-        for(let key in queryParams){
-          queryParams[key] = nativeParams[key] || '';          
-        }
-        returnXHRResult(tabId, (params as any).requestId, JSON.stringify(queryParams));
-      }else if(url.includes("reqreadfile")){
-        const queryParams =  getQueryParams(url);
-        const res = {}
-        for(let key in queryParams){
-          res[queryParams[key]] = nativeFileContent[queryParams[key]] || '';       
-        }
-        returnXHRResult(tabId, (params as any).requestId, JSON.stringify(res));
-      } else {
-        await chrome.debugger.sendCommand(
-          { tabId },
-          "Fetch.continueRequest",
-          params
-        );
+  } else if (url.includes("reqxml")) {
+    sendRequestAgain({
+      method: requestMethod,
+      url,
+      data: replaceNativeParams(parseData(postData)),
+      headers,
+    })
+      .then((response) => response.text())
+      .then((result) => {
+        returnXHRResult(tabId, (params as any).requestId, result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else if (url.includes("reqlocal")) {
+    // 变量读取
+    const res = reqLocal(url);
+    returnXHRResult(tabId, (params as any).requestId, res);
+  } else if (url.includes("reqreadfile")) {
+    const res = reqFile(url);
+    returnXHRResult(tabId, (params as any).requestId, res);
+  } else if (url.includes("reqreadmap")) {
+    const res = reqMemory(url);
+    returnXHRResult(tabId, (params as any).requestId, res);
+  } else if(url.includes("reqsofttodo")){
+    writeLocal(url);
+    returnXHRResult(tabId, (params as any).requestId,"");
+  }else if(url.includes("reqsavemap")){
+    writeMemory(url);
+    returnXHRResult(tabId, (params as any).requestId,"");
+  }else if(url.includes("reqsavefile")){
+    writeFile(url, postData)
+    returnXHRResult(tabId, (params as any).requestId,"");
+  }else {
+    await chrome.debugger.sendCommand(
+      { tabId },
+      "Fetch.continueRequest",
+      params
+    );
+  }
+});
+chrome.debugger.onDetach.addListener((source, reason) => {
+  console.log("断开连接", source, reason);
+  const { tabId } = source;
+  chrome.debugger.detach({ tabId }, async () => {
+    await chrome.debugger.sendCommand(
+      { tabId: tabId },
+      "Fetch.disable",
+      {},
+      () => {
+        console.log("关闭拦截页面请求");
+      }
+    );
+  });
+});
+function init() {
+  chrome.debugger.getTargets((lists) => {
+    console.log(lists);
+    lists.forEach((tab) => {
+      if (judgeIsFetchRequest(tab.url) && tab.tabId) {
+        const tabId = tab.tabId;
+        chrome.debugger.attach({ tabId }, "1.3", async () => {
+          await chrome.debugger.sendCommand(
+            { tabId },
+            "Fetch.enable",
+            {},
+            () => {
+              console.log("开启拦截页面请求");
+            }
+          );
+        });
       }
     });
   });
 }
-chrome.runtime.onInstalled.addListener(async () => {
-  // 可以实现拦截页面请求
-  let queryOptions = { active: true, currentWindow: true };
-  chrome.tabs.query(queryOptions, (tabs) => {
-    let [tab] = tabs;
-    const tabId = tab.id;
-    console.log("当前tab信息", tab);
-    bindActiveTab(tabId, tab.url);
+function cancelListenNetwork() {
+  chrome.debugger.getTargets((lists) => {
+    console.log("list", lists);
+
+    lists.forEach((tab) => {
+      if (judgeIsFetchRequest(tab.url) && tab.attached) {
+        const tabId = tab.tabId;
+        chrome.debugger.detach({ tabId }, async () => {
+          await chrome.debugger.sendCommand(
+            { tabId: tabId },
+            "Fetch.disable",
+            {},
+            () => {
+              console.log("关闭拦截页面请求");
+            }
+          );
+        });
+      }
+    });
+  });
+}
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.get(["switch"], ({ switch: data }) => {
+    if (data) {
+      init();
+    }
   });
 });
-chrome.tabs.onActivated.addListener(function (activeInfo) {
-  if (activeInfo.tabId) {
-    chrome.tabs.get(activeInfo.tabId, function (tab) {
-      console.log("新打开的tab信息", tab);
-      bindActiveTab(tab.id, tab.url);
-    });
+chrome.tabs.onCreated.addListener((tab) => {
+  console.log("新建的tab", tab);
+});
+// 插件运行时监听当前tab，有数据一执性问题
+// chrome.runtime.onInstalled.addListener(async () => {
+//   if (global.switch) {
+//     let queryOptions = { active: true, currentWindow: true };
+//     chrome.tabs.query(queryOptions, (tabs) => {
+//       let [tab] = tabs;
+//       const tabId = tab.id;
+//       console.log("当前tab信息", tab);
+//       bindActiveTab(tabId, tab.url);
+//     });
+//   }
+// });
+// 开关状态改变时要 取消监听 网络请求
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+    switch (key) {
+      case "switch": {
+        let queryOptions = { active: true, currentWindow: true };
+
+        if (newValue) {
+          // 打开开关
+          init();
+        } else {
+          //关闭开关
+          cancelListenNetwork();
+        }
+        break;
+      }
+    }
   }
 });

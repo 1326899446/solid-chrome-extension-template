@@ -1,13 +1,11 @@
-import { nativeParams } from '../constant';
+import { global } from '../data/data';
 import { MapActionToServer } from './constant';
 
 export function parseData(data) {
   // 将 a=1&b=2形式字符串解析为一个object
   if(!data){
     return {}
-  }
-  console.log("data", data);
-  
+  } 
   const dataArr = data.split("&");
   const dataObj = dataArr.reduce((pre, cur) => {
     const singleDataArr = cur.split("=");
@@ -19,18 +17,14 @@ export function parseData(data) {
   return dataObj;
 }
 export function replaceNativeParams(data){
-  console.log(data);
-  
   const res = { ...data };
   Object.keys(res).forEach((key)=>{
     const value = decodeURIComponent(data[key]);
     if(value[0]==="(" && value[value.length-1]===")" && value[1]==="$"){
       const str = value.slice(2,value.length-1)
-      res[key] = nativeParams[str] || '';
+      res[key] = global.nativeParams[str] || '';
     }
   })
-  console.log(res);
-  
   return res
 }
 export function sendRequestAgain({ method, url, headers, data }) {
@@ -38,8 +32,6 @@ export function sendRequestAgain({ method, url, headers, data }) {
   //http://221.6.6.237:18100
   const queryParams = getQueryParams(url);
   const targetAddress = MapActionToServer(queryParams.action || '');
-  console.log("targetAddress",targetAddress);
-  
   // 获取域名，第三个 / 前的内容
   let count = 0;
   let i=0; 

@@ -46,6 +46,13 @@ export const handleAction = (action, url, initiator) => {
         });
         break
       }
+      case "10091": {
+        resolve({
+          jsfuncname: "",
+          params: "aa",
+        });
+        break
+      }
       default: {
         const qIndex = url.indexOf("?");
         const search = url.slice(qIndex);
@@ -74,3 +81,30 @@ export const handleAction = (action, url, initiator) => {
     }
   });
 };
+
+// 网页中通过 message 向浏览器插件发送消息，用于实现 action 功能
+// message 结构
+/**
+ * type:'action',
+ * params:{
+ *   url:'',
+ * }
+ */
+chrome.runtime.onMessageExternal.addListener(async (message, sender, sendResponse) => {
+  const { type, params } = message;
+  console.log("type",type,"message",message,"params",params,"sender",sender);
+  switch (type) {
+    case "action": {
+      let { url } = params || {}
+      url = decodeURIComponent(url)
+      const reg = /action:(\d+)/gi;
+      const action = reg.exec(url)?.[1];
+      const res = await handleAction(action, url, sender.origin)
+      if(res) sendResponse(res)
+      break;
+    }
+    default: {
+      sendResponse("aa")
+    }
+  }
+});

@@ -32,13 +32,13 @@ const Popup = () => {
   };
   const handleWeakAccountChange = ()=>{
     setWeakAccountStatus(!weakAccountStatus());
-    chrome.storage.sync.set({ nativeParams: {weakAccountStatus:weakAccountStatus(),accountStatus:accountStatus()} }, () => {
+    chrome.storage.sync.set({weakAccountStatus: weakAccountStatus()}, () => {
       console.log("弱账号状态改变");
     });
   }
   const handleAccountChange = ()=>{
     setAccountStatus(!accountStatus());
-    chrome.storage.sync.set({ nativeParams: {weakAccountStatus:weakAccountStatus(),accountStatus:accountStatus()} }, () => {
+    chrome.storage.sync.set({ accountStatus:accountStatus() }, () => {
       console.log("强账号状态改变");
     });
   }
@@ -50,9 +50,8 @@ const Popup = () => {
   onMount(() => {
     setTimeout(()=>{
       chrome.storage.sync.get(
-        ["switch", "mode", "nativeParams"],
-        ({ switch: data, mode, nativeParams }) => {
-          const {weakAccountStatus,accountStatus} = nativeParams;
+        ["switch", "mode", "weakAccountStatus",'accountStatus'],
+        ({ switch: data, mode, weakAccountStatus,accountStatus }) => {
           setMode(mode);
           setSwitchStatus(data);
           setAccountStatus(accountStatus)
