@@ -1,3 +1,4 @@
+import { global } from "../data/data";
 import { reqFile, reqLocal, reqMemory } from "./read";
 import {
   parseData,
@@ -139,21 +140,32 @@ chrome.runtime.onInstalled.addListener(() => {
     }
   });
 });
-chrome.tabs.onCreated.addListener((tab) => {
-  console.log("新建的tab", tab);
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  chrome.debugger.getTargets((lists) => {
+    console.log(lists);
+    lists.forEach((tab1) => {
+      if (tab1.tabId && tab1.tabId === tab.id && !tab1.attached && global.switch) {
+        if (judgeIsFetchRequest(tab.url) && tab.id) {
+          const tabId = tab.id;
+          chrome.debugger.attach({ tabId }, "1.3", async () => {
+            await chrome.debugger.sendCommand(
+              { tabId },
+              "Fetch.enable",
+              {},
+              () => {
+                console.log("开启拦截页面请求");
+                 chrome.tabs.reload(tabId)
+              }
+            );
+          });
+         
+        }
+      }
+    });
+  });
+  
 });
-// 插件运行时监听当前tab，有数据一执性问题
-// chrome.runtime.onInstalled.addListener(async () => {
-//   if (global.switch) {
-//     let queryOptions = { active: true, currentWindow: true };
-//     chrome.tabs.query(queryOptions, (tabs) => {
-//       let [tab] = tabs;
-//       const tabId = tab.id;
-//       console.log("当前tab信息", tab);
-//       bindActiveTab(tabId, tab.url);
-//     });
-//   }
-// });
+
 // 开关状态改变时要 取消监听 网络请求
 chrome.storage.onChanged.addListener((changes, namespace) => {
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
