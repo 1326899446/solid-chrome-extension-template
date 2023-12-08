@@ -4,5 +4,8 @@ export const WEBVIEW_PARAMS = {
     topcolor:"",
     color:"",
 }
+export const AppMap={
+    cft:"涨乐财付通"
+}
     
 

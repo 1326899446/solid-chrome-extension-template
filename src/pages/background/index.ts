@@ -1,5 +1,3 @@
-import "./action";
-import "./data";
-import "./request";
-// https://chromedevtools.github.io/devtools-protocol/tot/Fetch/#method-enable
-
+import "../../modules/action/index";
+import "../../modules/data/index";
+import "../../modules/network/index";

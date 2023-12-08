@@ -1,8 +1,9 @@
-import { global } from "../data/data";
+import { globalState } from "../data/global";
 import { getQueryParams } from "./utils";
+
 export const reqLocal = (url: string) => {
-    console.log("获取local",url,global);
-    
+  console.log("获取local", url, globalState);
+
   const queryParams = getQueryParams(url);
   const keyArr = Object.keys(queryParams).map((key) => {
     return {
@@ -10,12 +11,14 @@ export const reqLocal = (url: string) => {
       originKey: key,
     };
   });
-  // 从 nativeParams 获取对应 key 的 value然后修改
+  // 从 appParams[globalState.app 获取对应 key 的 value然后修改
   for (let key in queryParams) {
-    queryParams[key] = global?.nativeParams[key.toLocaleLowerCase()] || "";
+    queryParams[key] =
+      globalState?.appParams[globalState.app].locals[key.toLocaleLowerCase()] ||
+      "";
   }
   // 处理弱账号相关信息
-  const weakAccountStatus = global?.weakAccountStatus || false;
+  const weakAccountStatus = globalState?.weakLoginStatus || false;
 
   if (!weakAccountStatus) {
     [
@@ -34,8 +37,7 @@ export const reqLocal = (url: string) => {
     });
   }
   // 处理强账号相关信息
-  // 处理弱账号相关信息
-  const accountStatus = global?.accountStatus || false;
+  const accountStatus = globalState?.loginStatus || false;
   if (!accountStatus) {
     ["account", "jyloginflag"].forEach((key) => {
       const keyIndex = keyArr.findIndex((item) => {
@@ -47,14 +49,19 @@ export const reqLocal = (url: string) => {
     });
   }
   console.log(queryParams);
-  
+
   return JSON.stringify(queryParams);
 };
+// 这里理解错了，readFile时其实只能一个一个读，直接返回文件内容即可，不要一个对象
 export const reqFile = (url: string) => {
   const queryParams = getQueryParams(url);
   const res = {};
   for (let key in queryParams) {
-    res[queryParams[key]] = global?.nativeFileContent[queryParams[key].toLocaleLowerCase()] || "";
+    return globalState?.appParams[globalState.app].files[
+      queryParams[key].toLocaleLowerCase()
+    ] || "";
+    // res[queryParams[key]] =
+      
   }
   return JSON.stringify(res);
 };

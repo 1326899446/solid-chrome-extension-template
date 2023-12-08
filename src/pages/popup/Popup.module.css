@@ -1,11 +1,15 @@
 .App {
     text-align: center;
     padding:10px;
-
+    font-size: 16px;
 
     .operateBtn {
         display:flex;
         justify-content: space-between;
+        border-bottom: 1px solid #eeeeee;
+    }
+    .app{
+        font-size: 16px;
         border-bottom: 1px solid #eeeeee;
     }
     .title{
@@ -32,5 +36,41 @@
     }
     .action{
         margin-top: 20px;
+    }
+    .local{
+        display: flex;
+        flex-direction: column;
+        max-height: 400px;
+        overflow: auto;
+        .localItem{
+            display: flex;
+            border-bottom: 1px solid #eeeeee;
+            align-items: center;
+            padding:5px;
+            .input{
+                height:30px;
+                flex:1;
+                min-height:0;
+            }
+        }
+        
+    }
+    .files{
+        display: flex;
+        flex-direction: column;
+        max-height: 400px;
+        overflow: auto;
+        .filesItem{
+            display: flex;
+            border-bottom: 1px solid #eeeeee;
+            align-items: center;
+            padding:5px;
+            .input{
+                height:30px;
+                flex:1;
+                min-height:0;
+            }
+        }
+        
     }
 }

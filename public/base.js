@@ -39,6 +39,7 @@
         document.body.appendChild(fragment);
     }
     // 重写appendChild方法，拦截埋点的上报，之所以这样，是因为 talkingdata:xxx 形式的链接不会被插件所拦截，也可能是我的境界不够。。。
+    // 现在的重写会导致云桌面无法打开
     const parent = window.document.head || window.document.body;
     const appendChildPre = parent.__proto__.appendChild;
     parent.appendChild=(child)=>{

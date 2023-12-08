@@ -1,3 +1,15 @@
+export const whitePages = ["localhost"];
+
+export const judgeAuthority = (url) => {
+  for (let i = 0; i < whitePages.length; i++) {
+    if (url.includes(whitePages[i])) {
+      return true;
+    }
+  }
+  return false;
+};
+
+
 function injectScript(file) {
   var s = document.createElement("script");
   s.setAttribute("type", "text/javascript");
@@ -20,22 +32,25 @@ function injectBridge(mode) {
 }
 
  // 注入工具脚本
- injectScript(chrome.runtime.getURL("base.js"));
+ if(judgeAuthority(location.href)){
+  injectScript(chrome.runtime.getURL("base.js"));
+ }
+ 
 // 初始获取开关状态和系统选择，加载对应的文件
-chrome.storage.sync.get(["switch"], ({ switch: data }) => {
-  if (data) {
-    chrome.storage.sync.get(["mode"], ({ mode }) => {
-      injectBridge(mode);
+chrome.storage.sync.get(["status"], ({ status }) => {
+  if (status) {
+    chrome.storage.sync.get(["os"], ({ os }) => {
+      injectBridge(os);
     });
   }
 });
 chrome.storage.onChanged.addListener((changes, namespace) => {
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
     switch (key) {
-      case "switch": {
+      case "status": {
         if (newValue) {
-          chrome.storage.sync.get(["mode"], ({ mode }) => {
-            injectBridge(mode);
+          chrome.storage.sync.get(["os"], ({ os }) => {
+            injectBridge(os);
           });
         } else {
           var th = document.getElementsByTagName("body")[0];
@@ -49,7 +64,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         }
         break;
       }
-      case "mode": {
+      case "os": {
         injectBridge(newValue);
       }
     }

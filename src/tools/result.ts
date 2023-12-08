@@ -20,10 +20,11 @@ export class Result<T, E> {
   }
 }
 
-export const parseUrl = (url:string)=>{
+// 解析URL
+export const parseUrl = (url:string, splitSymbol= '&&')=>{
   const qIndex = url.indexOf('?');
   const querystring = url.slice(qIndex+1);
-  const queryArr = querystring.split("");
+  const queryArr = querystring.split(splitSymbol);
   const queryObj = queryArr.reduce((pre,cur)=>{
     const curQuery = cur.split("=");
     return {

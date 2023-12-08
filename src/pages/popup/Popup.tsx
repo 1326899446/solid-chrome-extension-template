@@ -1,92 +1,96 @@
-import { Button, HopeProvider, Radio, RadioGroup, Switch } from "@hope-ui/solid";
+import {
+  Button,
+  HopeProvider,
+  Input,
+  Radio,
+  RadioGroup,
+  Switch,
+} from "@hope-ui/solid";
+import { setFiles, setLocals } from "@src/modules/data/utils";
 import "@src/styles/index.css";
 import { createSignal, onMount } from "solid-js";
-import { initWebviewContent } from "../background/constant";
 import styles from "./Popup.module.css";
+import { AppMap } from "./constant";
 
 const Popup = () => {
   const [switchStatus, setSwitchStatus] = createSignal<boolean>(true);
   const [mode, setMode] = createSignal<string>("Android");
   const [webviewParams, setWebviewParams] = createSignal({});
-  const [weakAccountStatus,setWeakAccountStatus] = createSignal<boolean>(true)
-  const [accountStatus,setAccountStatus] = createSignal<boolean>(true)
+  const [weakAccountStatus, setWeakAccountStatus] = createSignal<boolean>(true);
+  const [accountStatus, setAccountStatus] = createSignal<boolean>(true);
+  const [app, setApp] = createSignal("");
+
+  const [curAppParams, setCurAppParams] =
+    createSignal<
+      Record<"locals" | "files" | "memory", Record<string, string>>
+    >();
   const handleSwitchChange = async () => {
     setSwitchStatus(!switchStatus());
-    chrome.storage.sync.set({ switch: switchStatus() }, () => {
+    chrome.storage.sync.set({ status: switchStatus() }, () => {
       console.log("开关状态改变");
     });
   };
 
   const handleChange = (e) => {
     setMode(e);
-    chrome.storage.sync.set({ mode: e }, () => {
+    chrome.storage.sync.set({ os: e }, () => {
       console.log("系统选择改变");
     });
   };
   const jumpActionManager = () => {
     // 跳转到专门的action管理页面
-    chrome.runtime.openOptionsPage(()=>{
+    chrome.runtime.openOptionsPage(() => {
       console.log("aaaaaaaaa");
-      
-    })
+    });
   };
-  const handleWeakAccountChange = ()=>{
+  const handleWeakAccountChange = () => {
     setWeakAccountStatus(!weakAccountStatus());
-    chrome.storage.sync.set({weakAccountStatus: weakAccountStatus()}, () => {
+    chrome.storage.sync.set({ weakLoginStatus: weakAccountStatus() }, () => {
       console.log("弱账号状态改变");
     });
-  }
-  const handleAccountChange = ()=>{
+  };
+  const handleAccountChange = () => {
     setAccountStatus(!accountStatus());
-    chrome.storage.sync.set({ accountStatus:accountStatus() }, () => {
+    chrome.storage.sync.set({ loginStatus: accountStatus() }, () => {
       console.log("强账号状态改变");
     });
-  }
-  const test = ()=>{
-    chrome.storage.local.get(['webviewParams'],({webviewParams})=>{ 
-      console.log(webviewParams);     
-    })
-  }
+  };
+  const test = () => {
+    chrome.storage.local.get(["webviewParams"], ({ webviewParams }) => {
+      console.log(webviewParams);
+    });
+  };
   onMount(() => {
-    setTimeout(()=>{
+    setTimeout(() => {
+      // 可以获取全局变量
       chrome.storage.sync.get(
-        ["switch", "mode", "weakAccountStatus",'accountStatus'],
-        ({ switch: data, mode, weakAccountStatus,accountStatus }) => {
-          setMode(mode);
-          setSwitchStatus(data);
-          setAccountStatus(accountStatus)
-          setWeakAccountStatus(weakAccountStatus)
+        ["app", "status", "os", "weakLoginStatus", "loginStatus", "appParams"],
+        ({ app, status, os, weakLoginStatus, loginStatus, appParams }) => {
+          console.log(app, appParams);
+
+          setMode(os);
+          setSwitchStatus(status);
+          setAccountStatus(loginStatus);
+          setWeakAccountStatus(weakLoginStatus);
+          setApp(app);
+          setCurAppParams(appParams[app]);
         }
       );
-      chrome.storage.local.get(["webviewParams"], ({webviewParams}) => {
-        chrome.tabs.getSelected(null, function (tab) {
-          // 先获取当前页面的tabID
-          let curWebviewParams = webviewParams[tab.id];
-          setWebviewParams(curWebviewParams || initWebviewContent);
-          if(!curWebviewParams){ 
-            chrome.storage.local.set({webviewParams:{
-              ...webviewParams,
-              [tab.id]:initWebviewContent
-            }})
-          }
+      chrome.storage.local.get(["webviewParams"], ({ webviewParams }) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
+          setWebviewParams(webviewParams[tab[0].id] || {});
         });
       });
-    },0)
-    chrome.storage.onChanged.addListener((changes)=>{
-      console.log("changes",changes);
-      
-    })
+    }, 0);
   });
   return (
     <HopeProvider>
       <div class={styles.App}>
         <div class={styles.operateBtn}>
           <div class={styles.switch}>
-            <Switch checked={switchStatus()} onchange={handleSwitchChange}>开启状态</Switch>
-            {/* <RadioGroup value={switchStatus()} onChange={}>
-              <Radio value={true}>开启</Radio>
-              <Radio value={false}>关闭</Radio>
-            </RadioGroup> */}
+            <Switch checked={switchStatus()} onchange={handleSwitchChange}>
+              开启状态
+            </Switch>
           </div>
           <div class={styles.radio}>
             <RadioGroup value={mode()} onChange={handleChange}>
@@ -95,6 +99,7 @@ const Popup = () => {
             </RadioGroup>
           </div>
         </div>
+        <div class={styles.app}>当前APP：{AppMap[app()]}</div>
         <section class={styles.webview}>
           <div class={styles.title}>webview参数</div>
           <div class={styles.webviewParams}>
@@ -108,11 +113,55 @@ const Popup = () => {
           </div>
         </section>
         <section class={styles.login}>
-          <Switch checked={weakAccountStatus()} onchange={handleWeakAccountChange}>弱账号</Switch>
-          <Switch checked={accountStatus()} onchange={handleAccountChange}>强账号</Switch>
+          <Switch
+            checked={weakAccountStatus()}
+            onchange={handleWeakAccountChange}
+          >
+            弱账号
+          </Switch>
+          <Switch checked={accountStatus()} onchange={handleAccountChange}>
+            强账号
+          </Switch>
         </section>
-        <Button onClick={jumpActionManager} class={styles.action}>Action管理</Button>
-        <Button onClick={test} class={styles.action}>Test</Button>
+        <section class={styles.router}></section>
+        <section class={styles.local}>
+          <div>原生Local</div>
+          {curAppParams() &&
+            Object.keys(curAppParams().locals).map((key) => {
+              return (
+                <div class={styles.localItem}>
+                  {key}:
+                  <Input
+                    value={curAppParams().locals[key]}
+                    class={styles.input}
+                    onInput={(e) => setLocals({ [key]: e.target.value})}
+                  />
+                </div>
+              );
+            })}
+        </section>
+        <section class={styles.files}>
+          <div>原生File</div>
+          {curAppParams() &&
+            Object.keys(curAppParams().files).map((key) => {
+              return (
+                <div class={styles.filesItem}>
+                  {key}:
+                  <Input
+                    value={curAppParams().files[key]}
+                    class={styles.input}
+                    onInput={(e) => setFiles({ [key]: e.target.value})}
+                  />
+                </div>
+              );
+            })}
+        </section>
+        <Button onClick={jumpActionManager} class={styles.action}>
+          Action管理
+        </Button>
+        <Button onClick={test} class={styles.action}>
+          Test
+        </Button>
       </div>
     </HopeProvider>
   );

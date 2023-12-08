@@ -1,5 +1,5 @@
-import { global } from '../data/data';
-import { MapActionToServer } from './constant';
+import { globalState } from '../data/global';
+import { MapActionToServer, NATIVE_PARAMS_LIST } from './constant';
 
 export function parseData(data) {
   // 将 a=1&b=2形式字符串解析为一个object
@@ -22,7 +22,7 @@ export function replaceNativeParams(data){
     const value = decodeURIComponent(data[key]);
     if(value[0]==="(" && value[value.length-1]===")" && value[1]==="$"){
       const str = value.slice(2,value.length-1)
-      res[key] = global.nativeParams[str] || '';
+      res[key] = globalState.appParams[globalState.app][str] || '';
     }
   })
   return res
@@ -101,4 +101,13 @@ export async function returnScriptResult(tabId, requestId, data) {
 export function getQueryParams(url) {
     const qIndex = url.indexOf("?");
     return parseData(url.slice(qIndex+1))
+}
+
+export function addNativeParams(data) {
+  const res = { ...data };
+  Object.keys(NATIVE_PARAMS_LIST).forEach((key)=>{
+    // 对于这些key
+    res[key] = globalState.appParams[globalState.app][NATIVE_PARAMS_LIST[key]] || NATIVE_PARAMS_LIST[key]
+  })
+  return res
 }
