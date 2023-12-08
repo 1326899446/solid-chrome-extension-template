@@ -1,4 +1,4 @@
-import { setGlobal } from './global';
+import { globalState, setGlobal } from './global';
 import { initData } from './init';
 
 fetch("constants.json")
@@ -9,6 +9,7 @@ fetch("constants.json")
     Object.keys(constants.initedGlobal).forEach((key)=>{
         setGlobal(key,constants.initedGlobal[key])
     })
+    console.log("global",globalState);
     
     initData(constants);
   })

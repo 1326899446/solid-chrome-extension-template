@@ -4,6 +4,7 @@ export interface GlobalState {
   status: boolean; // 插件状态
   weakLoginStatus: boolean; // 弱账号登录状态
   loginStatus: boolean; // 强账号登录状态
+  jumpDirection:"dev"|"production",
   appParams: {
     [key: string]: {
       actions: {

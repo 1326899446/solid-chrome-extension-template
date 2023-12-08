@@ -12,6 +12,9 @@ export const initData = (constants) => {
   chrome.storage.sync.set({
     weakLoginStatus: constants.initedGlobal.weakLoginStatus,
   });
+  chrome.storage.sync.set({
+    jumpDirection: constants.initedGlobal.jumpDirection,
+  });
   chrome.storage.sync.set({ appParams: constants.initedGlobal.appParams });
 
   // 变量更新时更新全局变量

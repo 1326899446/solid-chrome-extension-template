@@ -48,9 +48,13 @@ export const reqLocal = (url: string) => {
       }
     });
   }
-  console.log(queryParams);
+  const res ={} 
+  Object.keys(queryParams).forEach((key)=>{
+    res[key.toLocaleUpperCase()]=queryParams[key]
+  })
+  console.log(res);
 
-  return JSON.stringify(queryParams);
+  return JSON.stringify(res);
 };
 // 这里理解错了，readFile时其实只能一个一个读，直接返回文件内容即可，不要一个对象
 export const reqFile = (url: string) => {

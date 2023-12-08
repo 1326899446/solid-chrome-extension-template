@@ -1,4 +1,4 @@
-export const whitePages = ["localhost"];
+export const whitePages = ["localhost","221.6.6.237"];
 
 export const judgeAuthority = (url) => {
   for (let i = 0; i < whitePages.length; i++) {

@@ -1,7 +1,7 @@
 // 暂时写死的
 export function MapActionToServer(action : string|number){
     const actionNumber= parseInt(`${action}`,10)
-    if(actionNumber >=27700 && actionNumber<=27799){
+    if(actionNumber >=27000 && actionNumber<=27799){
         return ZXAddress;
     }else if(actionNumber>=35100 && actionNumber<= 35199){
         return JYAddress;

@@ -5,6 +5,7 @@
     "status": true,
     "loginStatus": true,
     "weakLoginStatus": true,
+    "jumpDirection":"dev",
     "appParams": {
       "cft": {
         "actions": {
