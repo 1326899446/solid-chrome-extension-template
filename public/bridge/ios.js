@@ -127,13 +127,18 @@ async function call_app_android(api, params, callback) {
   xhr.send(send_data);
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4) {
-      // android老版本webview有可能返回空响应
       let res;
       try {
         res = JSON.parse(xhr.responseText);
       } catch (e) {
         console.log(xhr.responseText, api, params, e);
         res = xhr.responseText;
+      }
+      if(api === 'reqsavefile'){
+        callback({ errMsg: "ok", ERRORNO:true });
+      }
+      if (api === "reqreadfile") {
+        res = { content: xhr.responseText };
       }
       if (res) {
         callback({ errMsg: "ok", ...res });
@@ -160,7 +165,7 @@ window.WebViewJavascriptBridge = {
           },
           (res) => {
             // TODO 完善这的代码
-            callback(res)
+            callback(res);
           }
         );
         break;
@@ -205,8 +210,8 @@ window.WebViewJavascriptBridge = {
     }
   },
 };
-if(!window.callback){
-   window.callback = (res) => {
+if (!window.callback) {
+  window.callback = (res) => {
     // TODO 完善这的代码
     const { type, jsfuncname, params } = res;
     console.log(res);
@@ -239,4 +244,3 @@ if(!window.callback){
     }
   };
 }
-

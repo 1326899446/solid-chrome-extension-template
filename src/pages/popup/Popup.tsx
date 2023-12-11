@@ -185,7 +185,7 @@ const Popup = () => {
                     value={curAppParams().files[key]}
                     class={styles.input}
                     onInput={(e) =>
-                      setFiles(app(), curAppParams, { [key]: e.target.value })
+                      setFiles(app(), curAppParams(), { [key]: e.target.value })
                     }
                   />
                 </div>
