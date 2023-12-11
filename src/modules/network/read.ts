@@ -2,8 +2,6 @@ import { globalState } from "../data/global";
 import { getQueryParams } from "./utils";
 
 export const reqLocal = (url: string) => {
-  console.log("获取local", url, globalState);
-
   const queryParams = getQueryParams(url);
   const keyArr = Object.keys(queryParams).map((key) => {
     return {

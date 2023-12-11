@@ -9,7 +9,6 @@ const svnOrigin = "http://localhost:3004"
 export const action10061=(url:string,initiator:string)=>{
     // 如果有url= 则优先尝试在新标签页打开此url的开发环境页面/xxx.htm或者/xxx.html
     if (url.includes("url=")) {
-        console.log("新标签页面跳转：", url);
         const params = parseUrl(url, "&&");
         let htmlUrl = decodeURIComponent(params.url);
         if (htmlUrl.includes("url%3D")) {
@@ -29,7 +28,6 @@ export const action10061=(url:string,initiator:string)=>{
           if(globalState.jumpDirection==="dev"){
             const arr = htmlUrl.split("/");
             const last = arr[arr.length - 1];
-            console.log("htmlUrl",initiator,last);
             chrome.tabs.create({ url: `${initiator}/${last}` }, (tab) => {
               setTabWebviewParams(tab.id, webviewParams);
             });

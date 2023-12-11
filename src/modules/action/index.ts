@@ -3,22 +3,11 @@ import { handleAction } from "./actionList";
 chrome.runtime.onMessageExternal.addListener(
   async (message, sender, sendResponse) => {
     const { type, params } = message;
-    console.log(
-      "type",
-      type,
-      "message",
-      message,
-      "params",
-      params,
-      "sender",
-      sender
-    );
     switch (type) {
       case "action": {
         let { url } = params || {};
         // url = decodeURIComponent(url);
         const action = getAction(url);
-        console.log("action",action);
         
         const res = await handleAction(action, url, sender);
         if (res) sendResponse(res);
@@ -38,9 +27,7 @@ chrome.runtime.onMessageExternal.addListener(
         if(htmlurl){
           const htmlAction = getAction(htmlurl);
           handleAction(htmlAction, htmlurl, sender)
-        }
-        console.log("jsfuncname",jsfuncname);
-        
+        } 
         sendResponse({
           jsfuncname,
           params:null ,

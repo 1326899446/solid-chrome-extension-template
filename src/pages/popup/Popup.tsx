@@ -19,7 +19,7 @@ const Popup = () => {
   const [weakAccountStatus, setWeakAccountStatus] = createSignal<boolean>(true);
   const [accountStatus, setAccountStatus] = createSignal<boolean>(true);
   const [app, setApp] = createSignal("");
-  const [jumpDirection,setJumpDirection] = createSignal('')
+  const [jumpDirection, setJumpDirection] = createSignal("");
 
   const [curAppParams, setCurAppParams] =
     createSignal<
@@ -38,17 +38,18 @@ const Popup = () => {
       console.log("系统选择改变");
     });
   };
-  const handleJumpDirectionChange = (e)=>{
+  const handleJumpDirectionChange = (e) => {
     setJumpDirection(e);
     chrome.storage.sync.set({ jumpDirection: e }, () => {
       console.log("跳转方式改变");
     });
-  }
+  };
   const jumpActionManager = () => {
     // 跳转到专门的action管理页面
-    chrome.runtime.openOptionsPage(() => {
-      console.log("aaaaaaaaa");
-    });
+    // chrome.runtime.openOptionsPage(() => {
+    //   console.log("aaaaaaaaa");
+    // });
+    alert(JSON.stringify(curAppParams().actions));
   };
   const handleWeakAccountChange = () => {
     setWeakAccountStatus(!weakAccountStatus());
@@ -62,18 +63,30 @@ const Popup = () => {
       console.log("强账号状态改变");
     });
   };
-  const test = () => {
-    chrome.storage.local.get(["webviewParams"], ({ webviewParams }) => {
-      console.log(webviewParams);
-    });
-  };
+
   onMount(() => {
     setTimeout(() => {
       // 可以获取全局变量
       chrome.storage.sync.get(
-        ["app", "status", "os", "weakLoginStatus", "loginStatus", "appParams","jumpDirection"],
-        ({ app, status, os, weakLoginStatus, loginStatus, appParams,jumpDirection }) => {
-          console.log(app, appParams);
+        [
+          "app",
+          "status",
+          "os",
+          "weakLoginStatus",
+          "loginStatus",
+          "appParams",
+          "jumpDirection",
+        ],
+        ({
+          app,
+          status,
+          os,
+          weakLoginStatus,
+          loginStatus,
+          appParams,
+          jumpDirection,
+        }) => {
+          console.log("当前APP及其参数", app, appParams);
 
           setMode(os);
           setSwitchStatus(status);
@@ -107,7 +120,10 @@ const Popup = () => {
             </RadioGroup>
           </div>
           <div class={styles.radio}>
-            <RadioGroup value={jumpDirection()} onChange={handleJumpDirectionChange}>
+            <RadioGroup
+              value={jumpDirection()}
+              onChange={handleJumpDirectionChange}
+            >
               <Radio value="dev">开发页面</Radio>
               <Radio value="production">线上页面</Radio>
             </RadioGroup>
@@ -148,7 +164,11 @@ const Popup = () => {
                   <Input
                     value={curAppParams().locals[key]}
                     class={styles.input}
-                    onInput={(e) => setLocals(app(),curAppParams(),{ [key]: e.target.value})}
+                    onInput={(e) =>
+                      setLocals(app(), curAppParams(), {
+                        [key]: e.target.value,
+                      })
+                    }
                   />
                 </div>
               );
@@ -164,7 +184,9 @@ const Popup = () => {
                   <Input
                     value={curAppParams().files[key]}
                     class={styles.input}
-                    onInput={(e) => setFiles(app(),curAppParams,{ [key]: e.target.value})}
+                    onInput={(e) =>
+                      setFiles(app(), curAppParams, { [key]: e.target.value })
+                    }
                   />
                 </div>
               );
@@ -172,9 +194,6 @@ const Popup = () => {
         </section>
         <Button onClick={jumpActionManager} class={styles.action}>
           Action管理
-        </Button>
-        <Button onClick={test} class={styles.action}>
-          Test
         </Button>
       </div>
     </HopeProvider>

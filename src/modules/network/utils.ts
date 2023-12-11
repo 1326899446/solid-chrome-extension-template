@@ -48,8 +48,6 @@ export function replaceNativeParams(data) {
       }
     }
   });
-  console.log("res", res, globalState);
-
   return res;
 }
 export function sendRequestAgain({ method, url, headers, data }) {
@@ -80,7 +78,6 @@ export function sendRequestAgain({ method, url, headers, data }) {
     str = strArr.join("&");
     url = url + "&" + str;
   }
-  console.log(url);
   return fetch(url, {
     method,
     headers,

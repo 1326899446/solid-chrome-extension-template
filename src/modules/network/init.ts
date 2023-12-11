@@ -13,7 +13,6 @@ import { writeFile, writeLocal, writeMemory } from "./write";
 
 export const init = () => {
   chrome.debugger.getTargets((lists) => {
-    console.log(lists);
     lists.forEach((tab) => {
       if (judgeAuthority(tab.url) && tab.tabId) {
         const tabId = tab.tabId;
@@ -33,8 +32,6 @@ export const init = () => {
 };
 function cancelListenNetwork() {
   chrome.debugger.getTargets((lists) => {
-    console.log("list", lists);
-
     lists.forEach((tab) => {
       if (judgeAuthority(tab.url) && tab.attached) {
         const tabId = tab.tabId;
@@ -61,7 +58,6 @@ export const initNetowrk = () => {
     });
 
     chrome.debugger.onEvent.addListener(async (source, method, params) => {
-      console.log("请求信息", source, method, params);
       const { tabId } = source;
       const resourceType = (params as any).resourceType;
       const {
@@ -140,7 +136,6 @@ export const initNetowrk = () => {
     });
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       chrome.debugger.getTargets((lists) => {
-        console.log(lists);
         lists.forEach((tab1) => {
           if (
             globalState.status &&
@@ -167,7 +162,7 @@ export const initNetowrk = () => {
       });
     });
     // 开关状态改变时要 取消监听 网络请求
-    chrome.storage.onChanged.addListener((changes, namespace) => {
+    chrome.storage.onChanged.addListener((changes, namespace) => { 
       for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
         switch (key) {
           case "status": {

@@ -22,12 +22,17 @@ export const writeMemory = (url: string) => {
   chrome.storage.sync.set({ appParams: {...globalState.appParams} });
 };
 export const writeFile = (url: string, data: string) => {
+  
+  
   const queryParams = getQueryParams(url);
+  console.log(Object.entries(queryParams));
   const curAppParams = globalState.appParams[globalState.app].files
   const newFile = {
     ...curAppParams,
-    ...queryParams,
   };
+  Object.entries(queryParams).forEach((entry)=>{
+    newFile[(entry[1] as string).toLocaleLowerCase()] = data
+  })
   globalState.appParams[globalState.app].files = newFile;
   chrome.storage.sync.set({ appParams: {...globalState.appParams} });
 };

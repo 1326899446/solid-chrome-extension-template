@@ -10,7 +10,6 @@ let actions = {};
 fetch("cft_action.js")
   .then((response) => response.text())
   .then((data) => {
-    console.log(data);
     eval(data);
   })
   .catch((error) => console.error("Error:", error));
@@ -57,7 +56,6 @@ export const handleAction = (action, url: string, sender) => {
           const url10090 = decodeURIComponent(params.url || "");
           if (url10090) {
             const action10090 = getAction(url10090);
-            console.log("action10090", url10090, action10090);
             handleAction(action10090, url10090, sender);
           }
           resolve({

@@ -11,6 +11,15 @@
         "actions": {
           "10061": {
             "description": "打开新页面"
+          },
+          "10090":{
+            "description": "强登录模拟"
+          },
+          "10092":{
+            "description": "弱登录模拟"
+          },
+          "3413":{
+            "description": "关闭页面"
           }
         },
         "locals": {

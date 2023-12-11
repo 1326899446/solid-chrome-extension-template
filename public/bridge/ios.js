@@ -129,11 +129,11 @@ async function call_app_android(api, params, callback) {
     if (xhr.readyState === 4) {
       // android老版本webview有可能返回空响应
       let res;
-      console.log(xhr.responseText);
       try {
         res = JSON.parse(xhr.responseText);
       } catch (e) {
         console.log(xhr.responseText, api, params, e);
+        res = xhr.responseText;
       }
       if (res) {
         callback({ errMsg: "ok", ...res });
@@ -199,7 +199,6 @@ window.WebViewJavascriptBridge = {
         break;
       }
       case "reqxml": {
-        console.log("接受一个reqxml请求");
         call_app_android(api, params, callback);
         break;
       }
@@ -234,7 +233,6 @@ if(!window.callback){
       };
       window.createDialog(text, success, fail);
     } else if (jsfuncname) {
-      console.log(jsfuncname, "jsfuncname");
       if (jsfuncname && typeof window[jsfuncname] === "function") {
         window[jsfuncname](params);
       }
