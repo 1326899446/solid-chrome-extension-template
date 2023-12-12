@@ -34,8 +34,21 @@
         height:48px;
         border-bottom: 1px solid #eeeeee;
     }
+    .baseUrl{
+        display: flex;
+        height:30px;
+        white-space: nowrap;
+        margin-bottom: 10px;
+        align-items: center;
+        border-bottom: 1px solid #eeeeee;
+    }
     .action{
-        margin-top: 20px;
+        display: flex;
+        height:30px;
+        white-space: nowrap;
+        margin-bottom: 10px;
+        align-items: center;
+        border-bottom: 1px solid #eeeeee;
     }
     .local{
         display: flex;
@@ -47,11 +60,7 @@
             border-bottom: 1px solid #eeeeee;
             align-items: center;
             padding:5px;
-            .input{
-                height:30px;
-                flex:1;
-                min-height:0;
-            }
+            
         }
         
     }
@@ -65,12 +74,17 @@
             border-bottom: 1px solid #eeeeee;
             align-items: center;
             padding:5px;
-            .input{
-                height:30px;
-                flex:1;
-                min-height:0;
-            }
+            
         }
         
+    }
+    .input{
+        height:30px;
+        flex:1;
+        min-height:0;
+    }
+    .button{
+        height:30px;
+
     }
 }

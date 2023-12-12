@@ -33,7 +33,15 @@ function injectBridge(mode) {
 
  // 注入工具脚本
  if(judgeAuthority(location.href)){
-  injectScript(chrome.runtime.getURL("base.js"));
+  console.log("base");
+  chrome.storage.sync.get(["baseUrl"], ({ baseUrl }) => {
+    if (baseUrl) {
+      console.log("base",baseUrl);
+      
+      injectScript(baseUrl);
+    }
+  });
+  
  }
  
 // 初始获取开关状态和系统选择，加载对应的文件
@@ -66,6 +74,10 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
       }
       case "os": {
         injectBridge(newValue);
+        break;
+      }
+      case "baseUrl": {
+        injectScript(newValue);
       }
     }
   }

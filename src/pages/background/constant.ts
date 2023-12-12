@@ -6,12 +6,7 @@ export const initedLoginStatus = {
 };
 // 一般来说每一个 tab 都有对应的 webview 参数
 // 每一次tab切换时读取自己的webview参数，并更新上去？
-export const initWebviewContent = {
-  shownavigationbar: 1,
-  isShowDarkStatusBar: 0,
-  topcolor: "ffffff",
-  color: "000000",
-};
+
 export const initAction = []
 export const initNativeParams = {
     mobilecode: "13770478985",

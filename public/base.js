@@ -1,6 +1,6 @@
 (function(exports){
     // 创建一个对话框，参数为提示信息和两个函数
-    exports.createDialog = function(message, ok, cancel){
+    const createDialog = function(message, ok, cancel){
         const fragment = document.createDocumentFragment();
         const div = document.createElement('div');
         div.id="dialog";
@@ -37,6 +37,30 @@
         div.appendChild(buttonDiv);
         fragment.appendChild(div);
         document.body.appendChild(fragment);
+    }
+    exports.createDialogLogin = function({
+        accountType,url,callback,text
+    }){
+        const success = () => {
+            chrome.runtime.sendMessage(
+              "eidkoplpehhpomkpccndgedopkbninin",
+              {
+                type: "login",
+                params: {
+                  accountType,
+                  url,
+                },
+              },
+              (res) => {
+                callback(res);
+              }
+            );
+            window?.GoBackOnLoad?.();
+          };
+          const fail = () => {
+            window?.GoBackOnLoad?.();
+          };
+          createDialog(text, success, fail);
     }
     // 重写appendChild方法，拦截埋点的上报，之所以这样，是因为 talkingdata:xxx 形式的链接不会被插件所拦截，也可能是我的境界不够。。。
     // 现在的重写会导致云桌面无法打开

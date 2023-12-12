@@ -2,7 +2,7 @@ import { webviewParamsList } from '@src/pages/background/constant';
 import { parseUrl } from '@src/tools/utils';
 import { globalState } from '../data/global';
 import { HQAddress } from '../network/constant';
-import { setTabWebviewParams } from './actionList';
+
 
 const svnOrigin = "http://localhost:3004"
  
@@ -25,17 +25,7 @@ export const action10061=(url:string,initiator:string)=>{
         // svn 跳转线上没啥问题，毕竟也不会有新的
         if (htmlUrl.includes("html")) {
           // .html的页面直接是origin+页面名称
-          if(globalState.jumpDirection==="dev"){
-            const arr = htmlUrl.split("/");
-            const last = arr[arr.length - 1];
-            chrome.tabs.create({ url: `${initiator}/${last}` }, (tab) => {
-              setTabWebviewParams(tab.id, webviewParams);
-            });
-          }else{
-            chrome.tabs.create({ url: `${HQAddress}/${htmlUrl}` }, (tab) => {
-              setTabWebviewParams(tab.id, webviewParams);
-            });
-          }
+          
           
         } else {
           // svn页面直接跳完整路径

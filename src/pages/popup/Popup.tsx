@@ -20,6 +20,8 @@ const Popup = () => {
   const [accountStatus, setAccountStatus] = createSignal<boolean>(true);
   const [app, setApp] = createSignal("");
   const [jumpDirection, setJumpDirection] = createSignal("");
+  const [actionUrl, setActionUrl] = createSignal("");
+  const [baseUrl, setBaseUrl] = createSignal("");
 
   const [curAppParams, setCurAppParams] =
     createSignal<
@@ -76,6 +78,8 @@ const Popup = () => {
           "loginStatus",
           "appParams",
           "jumpDirection",
+          "actionUrl",
+          "baseUrl",
         ],
         ({
           app,
@@ -85,9 +89,10 @@ const Popup = () => {
           loginStatus,
           appParams,
           jumpDirection,
+          actionUrl,
+          baseUrl
         }) => {
           console.log("当前APP及其参数", app, appParams);
-
           setMode(os);
           setSwitchStatus(status);
           setAccountStatus(loginStatus);
@@ -95,6 +100,8 @@ const Popup = () => {
           setApp(app);
           setCurAppParams(appParams[app]);
           setJumpDirection(jumpDirection);
+          setActionUrl(actionUrl);
+          setBaseUrl(baseUrl);
         }
       );
       chrome.storage.local.get(["webviewParams"], ({ webviewParams }) => {
@@ -153,6 +160,28 @@ const Popup = () => {
             强账号
           </Switch>
         </section>
+        <section class={styles.baseUrl}>
+          注入到页面的文件地址：
+          <Input
+            value={baseUrl()}
+            class={styles.input}
+            onInput={(e) => setBaseUrl(e.target.value)}
+          ></Input>
+          <Button onClick={()=>{
+            chrome.storage.sync.set({baseUrl:baseUrl()})
+          }} class={styles.button}>确定修改</Button>
+        </section>
+        <section class={styles.action}>
+          action 地址：
+          <Input
+            value={actionUrl()}
+            class={styles.input}
+            onInput={(e) => setActionUrl(e.target.value)}
+          ></Input>
+          <Button onClick={()=>{
+            chrome.storage.sync.set({actionUrl:actionUrl()})
+          }} class={styles.button}>确定修改</Button>
+        </section>
         <section class={styles.router}></section>
         <section class={styles.local}>
           <div>原生Local</div>
@@ -192,9 +221,9 @@ const Popup = () => {
               );
             })}
         </section>
-        <Button onClick={jumpActionManager} class={styles.action}>
+        {/* <Button onClick={jumpActionManager} class={styles.action}>
           Action管理
-        </Button>
+        </Button> */}
       </div>
     </HopeProvider>
   );

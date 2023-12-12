@@ -16,7 +16,8 @@ export const initData = (constants) => {
     jumpDirection: constants.initedGlobal.jumpDirection,
   });
   chrome.storage.sync.set({ appParams: constants.initedGlobal.appParams });
-
+  chrome.storage.sync.set({ actionUrl: constants.initedGlobal.actionUrl });
+  chrome.storage.sync.set({ baseUrl: constants.initedGlobal.baseUrl });
   // 变量更新时更新全局变量
   chrome.storage.onChanged.addListener((changes, namespace) => {
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
