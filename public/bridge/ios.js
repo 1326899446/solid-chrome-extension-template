@@ -165,7 +165,7 @@ window.WebViewJavascriptBridge = {
           },
           (res) => {
             // TODO 完善这的代码
-            callback(res);
+            callback1(res);
           }
         );
         break;
@@ -210,13 +210,13 @@ window.WebViewJavascriptBridge = {
     }
   },
 };
-if (!window.callback) {
-  window.callback = (res) => {
+if (!window.callback1) {
+  window.callback1 = (res) => {
     // TODO 完善这的代码
-    const { type, jsfuncname, params } = res;
+    const { type, jsfuncname, params } = res || {};
     console.log(res);
     if(type){
-      window[type]?.({...res,callback});
+      window[type]?.({...res,callback:callback11});
     } else if (jsfuncname) {
       if (jsfuncname && typeof window[jsfuncname] === "function") {
         window[jsfuncname](params);

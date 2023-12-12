@@ -1,4 +1,3 @@
-import { importScript } from '../action/utils';
 
 export interface GlobalState {
   app: string; // app
@@ -27,7 +26,10 @@ export const setGlobal =async (key, value) => {
   // 如果重新设置了 actionUrl 的值，则要重新请求
   if(key === 'actionUrl'){
     // 如果action的Url改变，请求
-    const data = await importScript(value);
-    eval(data||'')
+    const data = await import(value);
+    console.log(data);
+    
+    globalState.handleActionRemote = data.handleActionRemote;
+    globalState.MapActionToServer = data.MapActionToServer;
   }
 };

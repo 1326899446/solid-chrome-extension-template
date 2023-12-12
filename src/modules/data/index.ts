@@ -1,13 +1,11 @@
 import { setGlobal } from './global';
 import { initData } from './init';
-
-fetch("constants.json")
-  .then((response) => response.text())
-  .then((data) => {
-    const constants = JSON.parse(data)
-    Object.keys(constants.initedGlobal).forEach((key)=>{
-        setGlobal(key,constants.initedGlobal[key])
-    })
-    initData(constants);
+import(chrome.runtime.getURL("constants.js")).then((data) => {
+  const constants = data
+  Object.keys(constants.initedGlobal).forEach((key)=>{
+      setGlobal(key,constants.initedGlobal[key])
   })
-  .catch((error) => console.error("Error:", error));
+  initData(constants);
+})
+.catch((error) => console.error("Error:", error));
+  

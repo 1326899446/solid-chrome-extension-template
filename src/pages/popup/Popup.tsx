@@ -46,13 +46,6 @@ const Popup = () => {
       console.log("跳转方式改变");
     });
   };
-  const jumpActionManager = () => {
-    // 跳转到专门的action管理页面
-    // chrome.runtime.openOptionsPage(() => {
-    //   console.log("aaaaaaaaa");
-    // });
-    alert(JSON.stringify(curAppParams().actions));
-  };
   const handleWeakAccountChange = () => {
     setWeakAccountStatus(!weakAccountStatus());
     chrome.storage.sync.set({ weakLoginStatus: weakAccountStatus() }, () => {

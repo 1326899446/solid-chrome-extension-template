@@ -27,10 +27,10 @@ export default defineConfig({
     minify: false,
     rollupOptions:{
       input:{
-        background: resolve(pagesDir, "background", "index.ts"),
+        background: resolve(pagesDir, "background", "index.html"),
         popup: resolve(pagesDir, "popup", "index.html"),
         content: resolve(pagesDir, "content", "index.ts"),
-        options: resolve(pagesDir, "options", "index.html"),
+        option: resolve(pagesDir, "options", "index.html"),
       },
       output: {
         entryFileNames: "[name].js",
