@@ -17,8 +17,9 @@ export interface GlobalState {
   actionUrl:string;
   baseUrl:string;
   handleActionRemote:any;
+  MapActionToServer:any;
 }
-
+// 用 var 为了能让 eval将其修改
 export var globalState: GlobalState = {} as GlobalState;
 
 export const setGlobal =async (key, value) => {

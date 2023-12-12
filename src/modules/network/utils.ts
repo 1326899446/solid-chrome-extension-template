@@ -1,5 +1,5 @@
 import { globalState } from "../data/global";
-import { MapActionToServer, NATIVE_PARAMS_LIST } from "./constant";
+import { NATIVE_PARAMS_LIST } from "./constant";
 
 export function parseData(data) {
   // 将 a=1&b=2形式字符串解析为一个object
@@ -54,7 +54,7 @@ export function sendRequestAgain({ method, url, headers, data }) {
   // 将收到的请求二次转发出去
   //http://221.6.6.237:18100
   const queryParams = getQueryParams(url);
-  const targetAddress = MapActionToServer(queryParams.action || "");
+  const targetAddress = globalState.MapActionToServer(queryParams.action || "");
   // 获取域名，第三个 / 前的内容
   let count = 0;
   let i = 0;
