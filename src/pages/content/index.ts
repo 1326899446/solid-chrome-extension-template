@@ -15,7 +15,8 @@ function injectScript(file) {
   s.setAttribute("type", "text/javascript");
   // s.innerHTML="window.a=222"
   s.setAttribute("src", file);
-  document.documentElement.appendChild(s);
+  const head = document.getElementsByTagName("head")[0];
+  head.insertBefore(s,head.firstChild);
 }
 function injectIOSBridge() {
   injectScript(chrome.runtime.getURL("bridge/ios.js"));
@@ -34,11 +35,11 @@ function injectBridge(mode) {
  // 注入工具脚本
  if(judgeAuthority(location.href)){
   console.log("base");
-  chrome.storage.sync.get(["baseUrl"], ({ baseUrl }) => {
+  chrome.storage.sync.get(["baseUrl"], async ({ baseUrl }) => {
     if (baseUrl) {
       console.log("base",baseUrl);
-      
-      injectScript(baseUrl);
+      injectScript(chrome.runtime.getURL('base.js'))
+      await injectScript(baseUrl);
     }
   });
   
