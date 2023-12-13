@@ -162,7 +162,7 @@ window.WebViewJavascriptBridge = {
         const { url } = params;
         // params 为 {url:""}
         chrome.runtime.sendMessage(
-          "eidkoplpehhpomkpccndgedopkbninin",
+          "pbgimoglchphmkaohjmnfaiglfejipeh",
           {
             type: "action",
             params: {

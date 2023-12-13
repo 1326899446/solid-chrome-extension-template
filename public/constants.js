@@ -8,7 +8,7 @@ export const initedGlobal = {
   actionUrl:
     "https://c.zhangle.com/pic/pic/cft/picture/mofang/rc-upload-1702292149307-21test.js?t=1702382067684",
   baseUrl:
-    "https://c.zhangle.com/pic/pic/cft/picture/mofang/rc-upload-1702292149307-7test.js?t=1702437323748",
+    "https://c.zhangle.com/pic/pic/cft/picture/mofang/rc-upload-1702292149307-7test.js?t=1702455937359",
   appParams: {
     cft: {
       actions: {

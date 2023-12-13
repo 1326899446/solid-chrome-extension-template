@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "name": "unitool chrome extension",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3ZzwR2yVt6hVHzwj/yz4H/FZ7kM/G9n03WhuxGKRPDQM7tOq6TPOr6njPE4ElwkfCJd5l+fOG7JFbYojPKZQV/A++skYlP5pCCddJnUWWc/tVfopD9mI+VH6Ivgg7bsHOe60fAsWLSKkd1/I/Nrrzcl8hDgYPL4KobW79y9qbe0CX/xHm/Prfcb6SHe32kwul+LnJM7KXF3frWZr/s5O491iRTpPj5vLA6rOYHwlDZKro/FpyuYCopjcyvSGsRPnCaUmplF3qABGCKSYKGUJfqhTMXjlWQlQg1zBKGqGRd29diThBS1p/ouuTTqRF5qx+axhjHbEKPRZdHuGXslhCQIDAQAB",
   "version": "0.0.1.0",
   "description": "站内环境模拟插件",
   "background": {

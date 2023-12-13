@@ -2,7 +2,7 @@ window.MyWebView = {
   onJsOverrideUrlLoading: (url) => {
     console.log("发现一个url载入",url);
     chrome.runtime.sendMessage(
-      "eidkoplpehhpomkpccndgedopkbninin",
+      "pbgimoglchphmkaohjmnfaiglfejipeh",
       {
         type: "action",
         params: {
