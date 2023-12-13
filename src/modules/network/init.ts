@@ -104,13 +104,13 @@ export const initNetowrk = () => {
         returnXHRResult(tabId, (params as any).requestId, res);
       } else if (url.includes("reqsofttodo")) {
         writeLocal(url);
-        returnXHRResult(tabId, (params as any).requestId, "");
+        returnXHRResult(tabId, (params as any).requestId, JSON.stringify({ERRORNO: '0'}));
       } else if (url.includes("reqsavemap")) {
         writeMemory(url);
         returnXHRResult(tabId, (params as any).requestId, "");
       } else if (url.includes("reqsavefile")) {
         writeFile(url, postData);
-        returnXHRResult(tabId, (params as any).requestId, "");
+        returnXHRResult(tabId, (params as any).requestId, JSON.stringify({ERRORNO:0}));
       } else {
         await chrome.debugger.sendCommand(
           { tabId },

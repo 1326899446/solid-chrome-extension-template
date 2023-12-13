@@ -137,6 +137,12 @@ async function call_app_android(api, params, callback) {
       if(api === 'reqsavefile'){
         callback({ errMsg: "ok", ERRORNO:true });
       }
+      if(api === 'reqsofttodo'){
+        callback({ errMsg: "ok", ERRORNO:true });
+      }
+      if(api === 'reqsavemap'){
+        callback({ errMsg: "ok", ERRORNO:true });
+      }
       if (api === "reqreadfile") {
         res = { content: xhr.responseText };
       }
@@ -216,7 +222,7 @@ if (!window.callback1) {
     const { type, jsfuncname, params } = res || {};
     console.log(res);
     if(type){
-      window[type]?.({...res,callback:callback11});
+      window[type]?.({...res,callback:window.callback1});
     } else if (jsfuncname) {
       if (jsfuncname && typeof window[jsfuncname] === "function") {
         window[jsfuncname](params);
