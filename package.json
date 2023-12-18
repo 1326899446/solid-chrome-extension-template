@@ -20,17 +20,17 @@
     "dependencies": {
         "@hope-ui/solid": "^0.6.7",
         "@stitches/core": "^1.2.8",
+        "axios": "1.5.1",
         "solid-js": "^1.6.2",
         "solid-transition-group": "^0.2.3",
-        "tailwindcss": "^3.3.2",
-        "axios": "1.5.1"
+        "tailwindcss": "^3.3.2"
     },
     "devDependencies": {
         "@crxjs/vite-plugin": "^2.0.0-beta.18",
         "@types/chrome": "0.0.235",
         "@types/node": "18.11.10",
-        "@typescript-eslint/eslint-plugin": "5.45.0",
-        "@typescript-eslint/parser": "5.45.0",
+        "@typescript-eslint/eslint-plugin": "^6.14.0",
+        "@typescript-eslint/parser": "^6.14.0",
         "autoprefixer": "^10.4.13",
         "babel-preset-solid": "^1.7.3",
         "eslint": "8.29.0",
